@@ -556,6 +556,7 @@ onUnmounted(() => stopThinkingTimer())
   flex: 1;
   max-height: 360px;
   padding: 10px 0;
+  overflow-y: auto;
 }
 
 .message-list-inner {
