@@ -297,7 +297,7 @@ const exampleQuestions = [
   { icon: '📝', query: 'docker简介', color: '#3b82f6' },
   { icon: '🛡️', query: 'milvus简介', color: '#10b981' },
   { icon: '🚀', query: 'ollama简介', color: '#f59e0b' },
-  { icon: '🔍', query: '如何在Linux上部署docker', color: '#8b5cf6' },
+  { icon: '🔍', query: 'spring AI简介', color: '#8b5cf6' },
 ]
 
 const handleFileChange = (file: UploadFile, fileList: UploadFile[]) => {
