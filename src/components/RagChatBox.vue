@@ -423,11 +423,7 @@ const sendQuery = async () => {
     }
 
   } catch (e) {
-    if (e.name === 'AbortError') {
-      console.log('Fetch aborted')
-    } else {
-      console.error(e)
-    }
+    console.error(e)
   } finally {
     isLoading.value = false
     isWaiting.value = false
