@@ -367,36 +367,67 @@ const sendQuery = async () => {
   isLoading.value = true
   isWaiting.value = true
   startThinkingTimer()
+
   const lastIdx = messages.value.push({ role: 'assistant', content: '' }) - 1
+
+  // 用于处理断包的缓冲区
+  let buffer = ""
+
   try {
     const chatId = window.localStorage.getItem('rag_chat_id') || generateUUID()
     window.localStorage.setItem('rag_chat_id', chatId)
+
     const response = await fetch(
       `/api/chat?query=${encodeURIComponent(userText)}&chatId=${chatId}`,
       { signal: abortController.signal },
     )
+
     if (!response.body) return
     const reader = response.body.getReader()
     const decoder = new TextDecoder()
+
     while (true) {
       const { done, value } = await reader.read()
       if (done) break
+
       if (isWaiting.value) {
         stopThinkingTimer()
         messages.value[lastIdx]!.duration = currentThinkingTime.value
         isWaiting.value = false
       }
-      const chunk = decoder.decode(value)
-      const lines = chunk.split('\n')
+
+      // 1. 将新到的字节流拼接到缓冲区，并开启 stream 模式防止乱码
+      buffer += decoder.decode(value, { stream: true })
+
+      // 2. 按行切割缓冲区内容
+      let lines = buffer.split('\n')
+
+      // 3. 💡 关键：将最后一行（可能是不完整的）留回缓冲区，下次循环拼接
+      buffer = lines.pop() || ""
+
+      // 4. 处理所有完整的行
       for (const line of lines) {
-        if (line.trim().startsWith('data:')) {
-          messages.value[lastIdx]!.content += line.trim().substring(5)
+        const trimmedLine = line.trim()
+        if (trimmedLine.startsWith('data:')) {
+          // 截取 data: 之后的所有内容并追加
+          const content = trimmedLine.substring(5)
+          messages.value[lastIdx]!.content += content
           scrollToBottom()
         }
       }
     }
+
+    // 最后处理一遍缓冲区剩余内容（如果有的话）
+    if (buffer.trim().startsWith('data:')) {
+      messages.value[lastIdx]!.content += buffer.trim().substring(5)
+    }
+
   } catch (e) {
-    console.error(e)
+    if (e.name === 'AbortError') {
+      console.log('Fetch aborted')
+    } else {
+      console.error(e)
+    }
   } finally {
     isLoading.value = false
     isWaiting.value = false
@@ -817,7 +848,7 @@ onUnmounted(() => stopThinkingTimer())
 /* 底部输入框优化 */
 .footer-area {
   flex-shrink: 0;
-  padding: 20px 0 32px;
+  padding: 20px 0 0px;
   background: linear-gradient(transparent, #f9fafb 40%);
 }
 
