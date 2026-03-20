@@ -88,7 +88,7 @@
         <div v-if="showDetails" id="tech-section" class="details-section">
           <!-- 性能对比卡片 -->
           <el-row :gutter="20">
-            <el-col :xs="24" :md="14">
+            <el-col :xs="24" :md="24">
               <el-card header="📊 工业级调优对比" class="info-card glass-effect performance-card">
                 <template #header>
                   <div class="card-header">
@@ -132,39 +132,46 @@
                 </div>
               </el-card>
             </el-col>
-
+          </el-row>
+          <el-row :gutter="20" style="margin-top: 20px;">
             <!-- 核心技术栈 -->
-            <el-col :xs="24" :md="10">
-              <el-card header="🛠️ 核心技术栈" class="info-card glass-effect">
-                <template #header>
-                  <div class="card-header">
-                    <div class="header-left">
-                      <span class="header-icon">🛠️</span>
-                      <span>核心技术栈</span>
-                    </div>
-                    <el-tag type="warning" size="small" effect="dark">最新版本</el-tag>
+            <el-col :xs="24" :md="24">
+            <el-card shadow="hover" class="techstack-card-v2">
+              <template #header>
+                <div class="card-header">
+                  <div class="header-left">
+                    <el-icon class="header-icon"><Tools /></el-icon>
+                    <h3>核心技术栈</h3>
                   </div>
-                </template>
-                <div class="tag-cloud">
-                  <el-tag
-                    v-for="(t, index) in techStack"
-                    :key="t"
-                    effect="dark"
-                    size="small"
-                    class="tech-tag"
-                    :style="{ animationDelay: `${index * 0.05}s` }"
-                  >
-                    {{ t }}
-                  </el-tag>
+                  <el-tag type="warning" size="small" effect="dark" round>最新版本</el-tag>
                 </div>
-                <el-divider class="styled-divider">调优要点</el-divider>
-                <ul class="mini-tips">
-                  <li v-for="(tip, index) in optimizationTips" :key="tip" :style="{ animationDelay: `${index * 0.1}s` }">
-                    <el-icon class="tip-icon"><Check /></el-icon>
-                    <span class="tip-text">{{ tip }}</span>
-                  </li>
-                </ul>
-              </el-card>
+              </template>
+
+              <!-- 技术栈标签流 -->
+              <div class="tech-flow">
+                <div class="tech-item" v-for="(tech, index) in allTechs" :key="index">
+                  <el-tag :type="getTechType(tech)" round size="small">{{ tech }}</el-tag>
+                </div>
+              </div>
+
+              <!-- 调优要点时间轴 -->
+              <div class="timeline">
+                <div
+                  v-for="(tip, index) in optimizationTips"
+                  :key="index"
+                  class="timeline-item"
+                >
+                  <div class="timeline-dot">
+                    <el-icon><CircleCheckFilled /></el-icon>
+                  </div>
+                  <div class="timeline-content">
+                    <div class="timeline-number">{{ String(index + 1).padStart(2, '0') }}</div>
+                    <div class="timeline-text">{{ tip }}</div>
+                  </div>
+                  <div class="timeline-bar" v-if="index < optimizationTips.length - 1"></div>
+                </div>
+              </div>
+            </el-card>
             </el-col>
           </el-row>
 
@@ -289,7 +296,7 @@
 
           <!-- 开源仓库 & 技术博客 -->
           <el-row :gutter="20" style="margin-top: 20px;">
-            <el-col :xs="24" :md="12">
+            <el-col :xs="24" :md="24">
               <el-card header="📦 开源代码仓库" class="info-card glass-effect repo-card">
                 <div class="repo-list">
                   <div class="repo-item" v-for="(repo, index) in repositories" :key="repo.name" :style="{ animationDelay: `${index * 0.08}s` }">
@@ -561,7 +568,7 @@
               <span class="school-name">哈尔滨师范大学</span>
             </div>
             <div class="education-info">
-              <span class="education-major">数字媒体技术</span>
+              <span class="education-major">数字媒体技术.游戏软件开发</span>
               <span class="education-degree">本科</span>
               <span class="education-time">2010.09 - 2014.07</span>
             </div>
@@ -616,6 +623,7 @@ import {
   User, Monitor, FolderOpened, Star, Link, Document, Calendar,
   Printer, Ticket, ShoppingCart, Reading
 } from '@element-plus/icons-vue'
+import { Tools, CircleCheckFilled } from '@element-plus/icons-vue'
 
 
 const router = useRouter()
@@ -766,16 +774,18 @@ const performanceData = [
 ]
 
 // 技术栈
-const techStack = [
-  'Spring Boot 3.4',
-  'Spring AI M6',
-  'Milvus 2.6',
-  'Ollama',
-  'Qwen2.5-1.5B',
-  'BGE-M3',
-  'Apache Tika',
-  'Docker'
+const allTechs = [
+  'Spring Boot 3.4', 'Spring AI M6', 'Milvus 2.6', 'Ollama',
+  'Qwen2.5-1.5B', 'BGE-M3', 'Apache Tika', 'Docker', 'NGINX'
 ]
+
+
+const getTechType = (tech) => {
+  if (tech.includes('Spring')) return ''
+  if (tech.includes('Milvus') || tech.includes('Ollama') || tech.includes('Qwen') || tech.includes('BGE')) return 'warning'
+  return 'success'
+}
+
 
 // 优化要点
 const optimizationTips = [
@@ -784,7 +794,9 @@ const optimizationTips = [
   'SSE 字符断包流式拼接修复',
   'Linux 内核 Swap 积极度调优',
   'JVM 内存红线严格限制',
-  'Milvus 容器资源配额化'
+  'Milvus 容器资源配额化',
+  'NGINX Gzip 压缩与静态缓存优化',
+  'NGINX 反向代理超时与连接池配置'
 ]
 
 // 服务器规格
@@ -818,7 +830,8 @@ const softwareSpecs = [
   { category: '文档解析', name: 'Apache Tika', version: 'Latest', purpose: '多格式文档解析', status: '生产级' },
   { category: '容器化', name: 'Docker', version: '24.0+', purpose: '服务隔离部署', status: '生产级' },
   { category: '编排工具', name: 'Docker Compose', version: '2.0+', purpose: '多容器管理', status: '生产级' },
-  { category: '前端框架', name: 'Vue 3', version: '3.4+', purpose: '用户界面', status: '生产级' }
+  { category: 'Web 服务器', name: 'Nginx', version: '1.25+', purpose: '反向代理 / Gzip 压缩 / SSE 流式响应支持',  status: '生产级'  },
+  { category: '前端框架', name: 'Vue 3', version: '3.4+', purpose: '用户界面', status: '生产级' },
 ]
 
 // 内存分配
@@ -856,6 +869,22 @@ const coreTechnologies = [
     features: ['首字即显', '断点续传', 'Buffer 拼接', '错误恢复']
   },
   {
+    name: 'NGINX 反向代理',
+    icon: '🌐',
+    level: '生产',
+    tagType: 'success', // 绿色代表稳定、通行
+    description: '七层负载均衡与静态资源加速，保障高并发下的系统稳定性',
+    features: ['Gzip 压缩', 'SSE 透传配置', 'Keepalive 长连接', '静态缓存策略']
+  },
+  {
+    name: 'Docker Compose 编排',
+    icon: '🐳',
+    level: '部署',
+    tagType: 'info', // 蓝色代表技术、基础设施
+    description: '多容器一键编排与环境隔离，实现微服务架构的快速交付',
+    features: ['一键启动', '网络隔离', '资源配额', '依赖管理']
+  },
+  {
     name: '内存分级管理',
     icon: '💾',
     level: '关键',
@@ -887,13 +916,6 @@ const repositories = [
     stars: '320',
     language: 'Shell',
     url: 'https://github.com/your-username/rag-deploy-scripts'
-  },
-  {
-    name: 'rag-optimization-guide',
-    description: '性能调优完整指南与最佳实践',
-    stars: '890',
-    language: 'Markdown',
-    url: 'https://github.com/your-username/rag-optimization-guide'
   }
 ]
 
@@ -1779,76 +1801,90 @@ onUnmounted(() => {
 }
 
 /* ==================== 技术栈标签 ==================== */
-.tag-cloud {
+.techstack-card-v2 {
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.tech-flow {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  padding: 8px 0;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f1f5f9;
+  border-radius: 12px;
 }
 
-.tech-tag {
-  animation: fadeInScale 0.4s ease forwards;
-  opacity: 0;
-  transform: scale(0.9);
-  font-weight: 500;
+.timeline {
+  position: relative;
+  padding-left: 20px;
 }
 
-@keyframes fadeInScale {
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.timeline-item {
+  position: relative;
+  padding-bottom: 20px;
 }
 
-.styled-divider {
-  margin: 20px 0 !important;
-}
-
-.styled-divider :deep(.el-divider__text) {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.mini-tips {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.mini-tips li {
+.timeline-dot {
+  position: absolute;
+  left: -28px;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  background: #10b981;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  background: rgba(64, 158, 255, 0.04);
-  border-radius: 10px;
-  animation: slideInLeft 0.4s ease forwards;
-  opacity: 0;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+.timeline-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
 }
 
-.tip-icon {
-  color: var(--success-color);
-  font-size: 1rem;
-  flex-shrink: 0;
+.timeline-content:hover {
+  border-color: #409EFF;
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.15);
+  transform: translateX(4px);
 }
 
-.tip-text {
-  color: var(--text-secondary);
+.timeline-number {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #409EFF;
+  background: #eff6ff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 36px;
+  text-align: center;
+}
+
+.timeline-text {
+  color: #475569;
   font-size: 0.9rem;
+  flex: 1;
 }
 
+.timeline-bar {
+  position: absolute;
+  left: -20px;
+  top: 24px;
+  width: 2px;
+  height: calc(100% - 4px);
+  background: linear-gradient(180deg, #e2e8f0 0%, #f1f5f9 100%);
+}
 /* ==================== 规格网格 ==================== */
 .spec-grid {
   display: grid;
