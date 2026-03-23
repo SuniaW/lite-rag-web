@@ -22,6 +22,13 @@ const router = createRouter({
       },
       props: true,
     },
+    {
+      path: `/chat/topic/:id`,
+      component: () => {
+        return import('../components/ManualMd.vue')
+      },
+      props: true,
+    },
   ],
 })
 

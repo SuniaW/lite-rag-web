@@ -13,7 +13,7 @@ import 'prismjs/components/prism-yaml'
 import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-javascript'
 
-
+import 'github-markdown-css/github-markdown.css'
 
 const app = createApp(App)
 app.config.globalProperties.$prism = Prism

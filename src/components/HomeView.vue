@@ -303,10 +303,6 @@
                       <h4>{{ repo.name }}</h4>
                       <p>{{ repo.description }}</p>
                       <div class="repo-meta">
-                        <span class="repo-stars">
-                          <el-icon><Star /></el-icon>
-                          {{ repo.stars }}
-                        </span>
                         <span class="repo-lang">{{ repo.language }}</span>
                       </div>
                     </div>
@@ -373,7 +369,7 @@
               <el-card
                 shadow="hover"
                 class="topic-card"
-                @click="handleTopicClick(topic)"
+                @click="handleTopicClick(index)"
               >
                 <div class="topic-card-header">
                   <span class="topic-num">{{ String(index + 1).padStart(2, '0') }}</span>
@@ -619,66 +615,66 @@ const showBackToTop = ref(false)
 // ==================== 学习手册数据 ====================
 const handbookTopics = [
   {
-    title: 'Spring AI 快速入门',
-    level: '基础',
-    desc: '掌握 Spring AI 核心概念与编程模型',
-    tags: ['架构解析', 'Prompt 模板', 'Model 调用'],
+    title: 'RAG 技术全景解析',
+    level: '架构',
+    desc: '从原理出发，深度解析检索增强生成的离线/在线双环架构设计',
+    tags: ['架构设计', '技术选型', '流程拆解'],
     progress: '100%'
   },
   {
-    title: 'RAG 架构设计',
+    title: 'Milvus 向量数据库',
+    level: '数据库',
+    desc: '从零搭建 RAG 系统核心组件，掌握 Milvus 2.6 高性能配置',
+    tags: ['向量检索', '环境搭建', 'HNSW 索引'],
+    progress: '100%'
+  },
+  {
+    title: 'Embedding 模型选型指南',
+    level: '核心',
+    desc: '深入对比 BGE、OpenAI 等主流模型，掌握 MTEB 评测与应用实战',
+    tags: ['模型对比', 'MTEB 排名', '语义嵌入'],
+    progress: '100%'
+  },
+  {
+    title: 'Ollama 模型管理与调优',
     level: '进阶',
-    desc: '理解检索增强生成的核心流程与选型',
-    tags: ['数据流转', '技术选型', '切片策略'],
+    desc: '让 AI 模型在低配服务器上流畅运行，针对 2核4G 的极致性能调优',
+    tags: ['模型量化', '线程配额', '本地部署'],
     progress: '100%'
   },
   {
-    title: '向量数据库实战',
-    level: '核心',
-    desc: 'Milvus 深度集成与 Embedding 应用',
-    tags: ['Milvus 部署', '向量检索', '混合搜索'],
+    title: 'Spring AI 后端开发实战',
+    level: '后端',
+    desc: '基于 Spring AI 封装 LLM 调用，仅需 30 行代码打通 RAG 核心逻辑',
+    tags: ['Spring AI', '业务流转', '代码实战'],
     progress: '100%'
   },
   {
-    title: '大模型集成',
-    level: '核心',
-    desc: 'Ollama 本地部署与 Prompt 工程优化',
-    tags: ['本地模型', 'Prompt 技巧', '流式输出'],
+    title: 'Vue3 前端开发实战',
+    level: '前端',
+    desc: '构建企业级对话界面，实现 SSE 流式 Markdown 渲染与打字机效果',
+    tags: ['Vue3', 'SSE 流', 'Markdown'],
     progress: '100%'
   },
   {
-    title: 'Vue3 前端开发',
-    level: '全栈',
-    desc: '构建现代化的 AI 对话交互界面',
-    tags: ['组件封装', '状态管理', '打字机效果'],
-    progress: '100%'
-  },
-  {
-    title: '系统性能调优',
+    title: 'RAG 系统性能调优实战',
     level: '高级',
-    desc: '全链路瓶颈分析与极致优化方案',
-    tags: ['多级缓存', '异步编排', '索引调优'],
+    desc: '全链路性能瓶颈拆解，实现首字响应从 3 秒到 300ms 的飞跃',
+    tags: ['性能瓶颈', '多级缓存', '并发控制'],
     progress: '100%'
   },
   {
-    title: '安全与权限',
+    title: 'RAG 安全与权限管理',
     level: '生产',
-    desc: '企业级数据保护与 RBAC 权限控制',
-    tags: ['文档级权限', '数据脱敏', '审计日志'],
+    desc: '实现文档级权限控制与敏感数据脱敏，构建企业级安全堡垒',
+    tags: ['数据保护', 'RBAC', '安全审计'],
     progress: '100%'
   },
   {
-    title: '运维监控体系',
-    level: '生产',
-    desc: 'Prometheus + Grafana 全方位监控',
-    tags: ['指标采集', '告警规则', '日志聚合'],
-    progress: '100%'
-  },
-  {
-    title: '故障排查与灾备',
+    title: 'RAG 系统运维与故障排查',
     level: '专家',
-    desc: '生产环境故障诊断与高可用方案',
-    tags: ['诊断脚本', '备份恢复', 'HA 部署'],
+    desc: '从 Docker 部署到监控体系构建，实战 OOM 与网络抖动排查指南',
+    tags: ['运维监控', '故障分析', '容器编排'],
     progress: '100%'
   }
 ]
@@ -706,9 +702,8 @@ const handbookFeatures = [
 
 // ==================== 学习手册相关函数 ====================
 const handleTopicClick = (topic: any) => {
-  ElMessage.info(`《${topic.title}》- 详细教程正在整理中，敬请期待！`)
   // 或者跳转到具体博文页面
-  // window.open(`/blog/${topic.id}`, '_blank')
+  window.open(`/chat/topic/${topic+1}`, '_blank')
 }
 
 const openGithubHandbook = () => {
@@ -722,13 +717,15 @@ const downloadPDF = () => {
 
 const getTopicLevelType = (level: string) => {
   const map: Record<string, any> = {
-    '基础': 'info',
-    '进阶': 'primary',
-    '核心': 'warning',
-    '高级': 'danger',
-    '生产': 'success',
-    '专家': 'danger',
-    '全栈': 'primary'
+    '架构': 'danger',    // 红色（最重要）
+    '数据库': 'warning',  // 橙色
+    '核心': 'warning',   // 橙色
+    '进阶': 'primary',   // 蓝色
+    '后端': 'success',   // 绿色
+    '前端': 'primary',   // 蓝色
+    '高级': 'danger',    // 红色
+    '生产': 'success',   // 绿色
+    '专家': 'danger'     // 红色
   }
   return map[level] || 'info'
 }
