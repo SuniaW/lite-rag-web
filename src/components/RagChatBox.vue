@@ -163,41 +163,6 @@
               </div>
             </div>
           </div>
-
-          <div class="example-section">
-            <div class="section-divider">
-              <span class="divider-line"></span>
-              <span class="divider-text">
-                <el-icon><Lightning /></el-icon>
-                您可以这样问我
-              </span>
-              <span class="divider-line"></span>
-            </div>
-            <div class="example-grid">
-              <div
-                v-for="(item, index) in exampleQuestions"
-                :key="index"
-                class="modern-card"
-                @click="handleExampleClick(item.query)"
-                :style="{ animationDelay: `${index * 0.1}s` }"
-              >
-                <div class="card-accent" :style="{ background: item.color }"></div>
-                <div class="card-content">
-                  <div class="card-header">
-                    <div class="card-icon-wrapper" :style="{ background: item.color + '20' }">
-                      <span class="card-icon">{{ item.icon }}</span>
-                    </div>
-                    <span class="card-title">{{ item.query }}</span>
-                  </div>
-                  <div class="card-action">
-                    <span>点击提问</span>
-                    <el-icon><ArrowRight /></el-icon>
-                  </div>
-                </div>
-                <div class="card-hover-glow"></div>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- 消息列表 -->
@@ -277,6 +242,14 @@
     <div class="footer-area">
       <div class="input-container-wrapper">
         <div class="input-card-refined glass-effect">
+            <el-tag
+              v-for="(item, index) in exampleQuestions"
+              :key="index"
+              @click="handleExampleClick(item.query)"
+              :style="{ animationDelay: `${index * 0.1}s` }"
+              type="primary" style="float: left;margin-right: 10px">
+              {{ item.query }}
+            </el-tag>
           <el-input
             v-model="queryInput"
             type="textarea"
@@ -299,23 +272,22 @@
             </div>
             <div class="bar-right">
               <el-button
+                size="small"
                 v-if="isLoading"
                 type="danger"
-                circle
                 :icon="CircleClose"
-                class="stop-btn glow-btn"
                 @click="stopGeneration"
               >
-                <span class="btn-text">停止</span>
+                停止
               </el-button>
               <el-button
+                size="small"
                 v-else
                 type="primary"
-                class="send-btn glow-btn"
                 :disabled="!queryInput.trim()"
                 @click="sendQuery"
               >
-                <span>发送</span>
+                发送
                 <el-icon><Promotion /></el-icon>
               </el-button>
             </div>
@@ -346,7 +318,7 @@
 import { ref, nextTick, onMounted, onUnmounted } from 'vue'
 import {
   Link, Timer, Files, CircleClose, Document, FolderOpened, UploadFilled,
-  Lightning, ArrowRight, CopyDocument, Star, CloseBold, Warning, ArrowUp, Cpu
+  Lightning, ArrowRight, CopyDocument, Star, CloseBold, Warning, ArrowUp, Cpu, Promotion
 } from '@element-plus/icons-vue'
 import axios from 'axios'
 import MarkdownIt from 'markdown-it'
@@ -1463,8 +1435,8 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
-  padding-top: 10px;
+  margin-top: 5px;
+  padding-top: 5px;
   border-top: 1px solid rgba(226, 232, 240, 0.6);
 }
 
