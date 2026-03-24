@@ -382,10 +382,10 @@ const welcomeFeatures = [
 
 // 示例问题
 const exampleQuestions = [
-  { icon: '📝', query: 'docker 简介', color: '#3b82f6' },
-  { icon: '🛡️', query: 'milvus 简介', color: '#10b981' },
-  { icon: '🚀', query: 'ollama 简介', color: '#f59e0b' },
-  { icon: '🔍', query: 'spring AI 简介', color: '#8b5cf6' },
+  { icon: '📝', query: 'RAG 系统的四大核心组件及角色分别是什么', color: '#3b82f6' },
+  { icon: '🛡️', query: '在 4GB 内存的低配环境下，各组件建议的内存分配红线是多少', color: '#10b981' },
+  { icon: '🚀', query: '为什么 RAG 系统推荐使用 SSE 协议而不是 WebSocket', color: '#f59e0b' },
+  { icon: '🔍', query: '文档切片（Chunking）平衡性能与精度的最佳实践配置是什么', color: '#8b5cf6' },
 ]
 
 // 文件类型颜色映射
@@ -1079,130 +1079,6 @@ onUnmounted(() => {
   font-size: 18px;
 }
 
-/* ==================== 示例卡片 ==================== */
-.example-section {
-  margin-top: 40px;
-}
-
-.section-divider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 24px;
-  gap: 16px;
-}
-
-.divider-line {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
-  flex: 1;
-  max-width: 120px;
-}
-
-.divider-text {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.example-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.modern-card {
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  overflow: hidden;
-  display: flex;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-sm);
-  position: relative;
-  animation: fadeInUp 0.5s ease forwards;
-  opacity: 0;
-}
-
-.modern-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--primary-color);
-  box-shadow: var(--shadow-lg);
-}
-
-.card-accent {
-  width: 4px;
-  flex-shrink: 0;
-}
-
-.card-content {
-  padding: 14px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.card-icon-wrapper {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.card-icon {
-  font-size: 16px;
-}
-
-.card-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.card-action {
-  font-size: 12px;
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  transition: color 0.3s ease;
-}
-
-.modern-card:hover .card-action {
-  color: var(--primary-color);
-}
-
-.card-hover-glow {
-  position: absolute;
-  bottom: -50%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100px;
-  height: 100px;
-  background: radial-gradient(circle, rgba(64, 158, 255, 0.15) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.modern-card:hover .card-hover-glow {
-  opacity: 1;
-}
-
 /* ==================== 消息气泡 ==================== */
 .msg-wrapper {
   display: flex;
@@ -1290,21 +1166,6 @@ onUnmounted(() => {
   line-height: 1.7;
   border-radius: 20px;
   position: relative;
-}
-
-.user-bubble {
-  background: var(--gradient-accent);
-  color: white;
-  border-bottom-right-radius: 6px;
-  box-shadow: 0 4px 15px rgba(64, 158, 255, 0.25);
-}
-
-.assistant-bubble {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--border-color);
-  border-top-left-radius: 6px;
-  color: var(--text-primary);
-  box-shadow: var(--shadow-md);
 }
 
 .msg-actions {
@@ -1489,35 +1350,6 @@ onUnmounted(() => {
   gap: 10px;
 }
 
-.stop-btn, .send-btn {
-  height: 38px !important;
-  padding: 0 22px !important;
-  font-weight: 600 !important;
-  border-radius: 12px !important;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.3s ease;
-  width: fit-content;
-}
-
-.send-btn {
-  background: var(--gradient-accent) !important;
-  border: none !important;
-  box-shadow: 0 4px 15px rgba(64, 158, 255, 0.3);
-}
-
-.send-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(64, 158, 255, 0.4);
-}
-
-.stop-btn {
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-  border: none !important;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-}
-
 .input-footer-tip {
   text-align: center;
   font-size: 12px;
@@ -1682,28 +1514,6 @@ onUnmounted(() => {
 .back-to-top:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 30px rgba(64, 158, 255, 0.4);
-}
-
-/* ==================== 动画过渡 ==================== */
-.slide-down-enter-active,
-.slide-down-leave-active {
-  transition: all 0.3s ease;
-}
-
-.slide-down-enter-from,
-.slide-down-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 
 /* ==================== Markdown 样式 ==================== */
