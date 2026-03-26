@@ -641,7 +641,6 @@ import {
   performanceData,
   projects,
   repositories,
-  router,
   serverSpecs,
   serviceSpecs,
   showBackToTop,
@@ -649,6 +648,7 @@ import {
   skills,
   softwareSpecs
 } from "@/assets/ts/constants.ts";
+import {useRouter} from "vue-router";
 
 
 
@@ -665,8 +665,14 @@ const handleToggleDetails = () => {
   }
 }
 
+const router = useRouter()
 const goToChat = () => {
   router.push('/chat/rag')
+}
+
+const openLink = (url: string) => {
+  if (url === '#') return
+  window.open(url, '_blank')
 }
 
 const scrollToSection = (id: string) => {
