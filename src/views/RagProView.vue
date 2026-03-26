@@ -53,7 +53,7 @@ import {useRouter} from "vue-router";
 const router = useRouter()
 const showBackToTop = ref(false)
 
-const goToChat = () => router.push('/chat/rag')
+const goToChat = () => router.push('/chat/ragbox')
 
 const scrollToSection = (id: string) => {
   const el = document.getElementById(id)
