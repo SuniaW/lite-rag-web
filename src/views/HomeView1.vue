@@ -37,7 +37,7 @@ const navCards = [
     title: 'RAG 智能问答',
     desc: '企业级私有知识库',
     actionText: '立即体验',
-    path: '/chat/ragpro',
+    path: '/chat/rag',
     icon: markRaw(ChatDotRound),
     typeClass: 'card-rag'
   },
@@ -45,7 +45,7 @@ const navCards = [
     title: 'AI 天气助手',
     desc: '实时气象与出行建议',
     actionText: '查看详情',
-    path: '/chat/ragpro', // 如果有不同路径可在此修改
+    path: '/chat/weather', // 如果有不同路径可在此修改
     icon: markRaw(Sunny),
     typeClass: 'card-weather'
   },
@@ -53,7 +53,7 @@ const navCards = [
     title: '关于作者',
     desc: '12 年经验全栈开发者',
     actionText: '了解更多',
-    path: '/chat/ragpro',
+    path: '/chat/about',
     icon: markRaw(UserFilled),
     typeClass: 'card-author'
   }
@@ -61,7 +61,6 @@ const navCards = [
 
 // 2. 统一跳转方法
 const handleGoto = (path: string) => {
-  console.log(`点击触发，准备跳转至: ${path}`);
   router.push(path);
 };
 </script>

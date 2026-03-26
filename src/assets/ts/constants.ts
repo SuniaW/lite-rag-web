@@ -151,8 +151,9 @@ export const allTechs = [
 
 
 export const getTechType = (tech: string) => {
-  if (tech.includes('Spring')) return ''
-  if (tech.includes('Milvus') || tech.includes('Ollama') || tech.includes('Qwen') || tech.includes('BGE')) return 'warning'
+  if (tech.includes('Spring') || tech.includes('NGINX')) return 'primary'
+  if (tech.includes('Milvus') || tech.includes('Ollama')
+    || tech.includes('Qwen') || tech.includes('BGE')) return 'warning'
   return 'success'
 }
 

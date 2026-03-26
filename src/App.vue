@@ -45,7 +45,7 @@
         </el-menu-item>
 
         <!-- 天气助手 -->
-        <el-menu-item index="/chat/code">
+        <el-menu-item index="/chat/weather">
           <el-icon><MagicStick /></el-icon>
           <template #title v-if="!isCollapse">AI 天气智能助手</template>
         </el-menu-item>

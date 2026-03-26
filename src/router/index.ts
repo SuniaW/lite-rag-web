@@ -10,13 +10,13 @@ const router = createRouter({
       },
     },
     {
-      path: '/chat/code',
+      path: '/chat/weather',
       component: () => {
         return import('../views/AiChatBox.vue')
       },
     },
     {
-      path: '/chat/rag',
+      path: '/chat/ragbox',
       component: () => {
         return import('../views/RagChatBox.vue')
       },
@@ -30,7 +30,7 @@ const router = createRouter({
       props: true,
     },
     {
-      path: `/chat/ragpro`,
+      path: `/chat/rag`,
       component: () => {
         return import('../views/RagProView.vue')
       },
