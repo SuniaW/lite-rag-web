@@ -1,7 +1,6 @@
 <template>
   <el-container class="layout-container">
     <!-- 侧边栏容器 -->
-    <!-- 侧边栏容器：深色背景 + 卡片阴影 -->
     <div class="sidebar-container">
       <!-- Logo 区域 -->
       <div class="logo-vertical">
@@ -16,14 +15,13 @@
         @click="isCollapse = !isCollapse"
         class="collapse-btn"
       >
-        <!-- 使用 el-icon 标签包裹箭头组件 -->
         <el-icon v-if="isCollapse"><DArrowRight /></el-icon>
         <el-icon v-else><DArrowLeft /></el-icon>
       </el-button>
 
-      <!-- 菜单 -->
+      <!-- 菜单：已抽取模型动态渲染 -->
       <el-menu
-        :default-active="$route.path"
+        :default-active="route.path"
         router
         class="optimized-menu"
         :collapse="isCollapse"
@@ -32,22 +30,9 @@
         text-color="#B3C0D1"
         active-text-color="#409eff"
       >
-        <!-- 首页 -->
-        <el-menu-item index="/">
-          <el-icon><HomeFilled /></el-icon>
-          <template #title v-if="!isCollapse">产品介绍</template>
-        </el-menu-item>
-
-        <!-- RAG 知识库 -->
-        <el-menu-item index="/chat/rag">
-          <el-icon><ChatDotRound /></el-icon>
-          <template #title v-if="!isCollapse">RAG 知识库问答</template>
-        </el-menu-item>
-
-        <!-- 天气助手 -->
-        <el-menu-item index="/chat/weather">
-          <el-icon><MagicStick /></el-icon>
-          <template #title v-if="!isCollapse">AI 天气智能助手</template>
+        <el-menu-item v-for="item in menuModel" :key="item.index" :index="item.index">
+          <el-icon><component :is="item.icon" /></el-icon>
+          <template #title v-if="!isCollapse">{{ item.title }}</template>
         </el-menu-item>
       </el-menu>
     </div>
@@ -74,18 +59,45 @@
     </el-container>
   </el-container>
 </template>
+
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
-import {ref} from "vue";
+import { ref, markRaw } from "vue";
 import {
+  Cpu,
   ChatDotRound,
   DArrowLeft,
   DArrowRight,
   HomeFilled,
   MagicStick
 } from "@element-plus/icons-vue";
+
 const route = useRoute()
 const isCollapse = ref(true)
+
+/**
+ * 菜单模型抽取
+ * title: 菜单名称
+ * index: 路由路径
+ * icon: 图标组件 (使用 markRaw 避免响应式开销)
+ */
+const menuModel = [
+  {
+    title: '产品介绍',
+    index: '/',
+    icon: markRaw(HomeFilled)
+  },
+  {
+    title: 'RAG 知识库问答',
+    index: '/chat/rag',
+    icon: markRaw(ChatDotRound)
+  },
+  {
+    title: 'AI 天气智能助手',
+    index: '/chat/weather',
+    icon: markRaw(MagicStick)
+  }
+]
 </script>
 
 <style>
@@ -97,11 +109,12 @@ body,
   padding: 0;
   height: 100%;
   width: 100%;
-  overflow: hidden; /* 核心：彻底切断外层滚动条 */
+  overflow: hidden;
 }
 </style>
 
 <style scoped>
+/* 保持原有所有样式不变 */
 .layout-container {
   height: 100vh;
   width: 100vw;
@@ -131,16 +144,15 @@ body,
   flex-direction: column;
 }
 .content-body {
-  padding: 0; /* 关键：移除默认 padding 让子页面自适应 */
+  padding: 0;
   background-color: #f5f7fa;
   flex: 1;
   position: relative;
-  overflow: hidden; /* 防止内部溢出影响外层 */
+  overflow: hidden;
 }
-/* --- 侧边栏整体样式 --- */
 .sidebar-container {
   height: 100vh;
-  background-color: #f0f2f5; /* 极浅蓝灰背景 */
+  background-color: #f0f2f5;
   color: #303133;
   border-right: 1px solid #dcdfe6;
   display: flex;
@@ -148,7 +160,6 @@ body,
   overflow: hidden;
 }
 
-/* --- Logo 区域 --- */
 .logo-vertical {
   height: 60px;
   display: flex;
@@ -157,7 +168,7 @@ body,
   gap: 10px;
   font-weight: bold;
   font-size: 16px;
-  background-color: #ffffff; /* Logo区域纯白，形成对比 */
+  background-color: #ffffff;
   border-bottom: 1px solid #dcdfe6;
 }
 
@@ -166,7 +177,6 @@ body,
   letter-spacing: 1px;
 }
 
-/* --- 折叠按钮 --- */
 .collapse-btn {
   margin: 10px auto;
   width: 36px;
@@ -182,15 +192,13 @@ body,
   color: #303133;
 }
 
-/* --- 优化后的菜单 --- */
 .optimized-menu {
   border-right: none;
   flex: 1;
   overflow-y: auto;
-  background-color: #f0f2f5 !important; /* 菜单背景与侧边栏一致 */
+  background-color: #f0f2f5 !important;
 }
 
-/* 菜单项样式 */
 .optimized-menu .el-menu-item {
   height: 50px;
   line-height: 50px;
@@ -205,15 +213,13 @@ body,
   color: #606266;
 }
 
-/* 悬停样式 */
 .optimized-menu .el-menu-item:hover {
   background-color: #e6e6e6 !important;
 }
 
-/* 选中样式：使用深蓝色高亮 */
 .optimized-menu .el-menu-item.is-active {
-  background-color: #d9e4f1 !important; /* 浅蓝背景 */
-  border-left: 4px solid #409eff; /* 蓝色竖条 */
+  background-color: #d9e4f1 !important;
+  border-left: 4px solid #409eff;
   padding-left: 16px !important;
   color: #1989fa !important;
 }

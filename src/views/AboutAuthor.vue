@@ -1,13 +1,7 @@
 <template>
-  <!-- 💡 核心滚动监听器保持在主容器 -->
   <div class="home-container" ref="aboutContainer" @scroll="handleScroll">
     <div class="main-content">
-      <!-- 4. 学习手册 -->
-      <HomeHandbook
-        :handbook-topics="handbookTopics"
-        @topic-click="handleTopicClick"
-        @open-github="openGithubHandbook"
-      />
+
 
       <!-- 5. 作者区 -->
       <HomeAuthor
@@ -48,13 +42,8 @@
 import {ArrowUp} from '@element-plus/icons-vue'
 
 // 💡 导入所有常量逻辑
-import {
-  author, contacts, handbookTopics,
-  handleTopicClick, openGithubHandbook
-  , projects
-} from "@/assets/ts/constants.ts"
+import {author, contacts, projects} from "@/assets/ts/constants.ts"
 import HomeAuthor from "@/components/ragpro/HomeAuthor.vue";
-import HomeHandbook from "@/components/ragpro/HomeHandbook.vue";
 import {onUnmounted, ref} from "vue";
 const aboutContainer = ref<HTMLElement | null>(null)
 

@@ -20,6 +20,13 @@
         />
       </transition>
 
+      <!-- 4. 学习手册 -->
+      <HomeHandbook
+        :handbook-topics="handbookTopics"
+        @topic-click="handleTopicClick"
+        @open-github="openGithubHandbook"
+      />
+
       <!-- 7. 回到顶部 -->
       <transition name="fade">
         <el-button v-if="showBackToTop" circle class="back-to-top glow-btn" @click="scrollToTop">
@@ -41,7 +48,7 @@ const homeContainer = ref<HTMLElement | null>(null)
 // 💡 导入所有常量逻辑
 import {
   badges,
-  coreMetrics,
+  coreMetrics, handbookTopics, handleTopicClick, openGithubHandbook,
   performanceData,
   softwareSpecs
 } from "@/assets/ts/constants.ts"
@@ -49,6 +56,7 @@ import HomeTechDetails from "@/components/ragpro/HomeTechDetails.vue";
 import HomeMetrics from "@/components/ragpro/HomeMetrics.vue";
 import HomeHero from "@/components/ragpro/HomeHero.vue";
 import {useRouter} from "vue-router";
+import HomeHandbook from "@/components/ragpro/HomeHandbook.vue";
 
 const router = useRouter()
 const showBackToTop = ref(false)

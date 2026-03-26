@@ -12,7 +12,7 @@ const router = createRouter({
     {
       path: '/chat/weather',
       component: () => {
-        return import('../views/AiChatBox.vue')
+        return import('../views/ProductIntro.vue')
       },
     },
     {
@@ -33,6 +33,13 @@ const router = createRouter({
       path: `/chat/rag`,
       component: () => {
         return import('../views/RagProView.vue')
+      },
+      props: true,
+    },
+    {
+      path: `/chat/about`,
+      component: () => {
+        return import('../views/AboutAuthor.vue')
       },
       props: true,
     },
