@@ -7,31 +7,91 @@
         <div class="hero-orb orb-3"></div>
       </div>
       <div class="hero-card glass-effect">
+        <!-- 1. 顶部标签组模型化 -->
         <div class="hero-badge-group">
-          <el-tag v-for="(badge, index) in badges" :key="badge.text" :type="badge.type" size="small" round class="hero-badge" :style="{ animationDelay: `${index * 0.1}s` }">
+          <el-tag
+            v-for="(badge, index) in badges"
+            :key="badge.text"
+            :type="badge.type"
+            size="small"
+            round
+            class="hero-badge"
+            :style="{ animationDelay: `${index * 0.1}s` }"
+          >
             <span class="badge-dot"></span> {{ badge.text }}
           </el-tag>
         </div>
+
+        <!-- 2. 标题模型化 -->
         <h1 class="hero-title">
-          <span class="gradient-text">Lite-RAG</span>
-          <span class="title-subtitle">智能助手</span>
+          <span class="gradient-text">{{ title.main }}</span>
+          <span class="title-subtitle">{{ title.sub }}</span>
         </h1>
+
+        <!-- 3. 描述文本模型化 (保持 strong 结构) -->
         <p class="hero-subtitle">
-          基于 <strong class="highlight-primary">Spring AI</strong> 与 <strong class="highlight-secondary">Milvus 2.6</strong> 构建的工业级私有化知识库。<br>
-          经过深度性能调优，实现 <strong class="highlight-accent">低功耗环境下的秒级生成</strong>。
+          {{ description.prefix }}
+          <strong class="highlight-primary">{{ description.hl1 }}</strong>
+          {{ description.middle }}
+          <strong class="highlight-secondary">{{ description.hl2 }}</strong>
+          {{ description.suffix }}
+          <br>
+          {{ description.line2Prefix }}
+          <strong class="highlight-accent">{{ description.hl3 }}</strong>
+          {{ description.line2Suffix }}
         </p>
+
+        <!-- 4. 动作按钮模型化 -->
         <div class="action-group">
-          <el-button type="primary" size="large" @click="$emit('go-chat')" round class="btn-primary glow-btn">
-            <el-icon><ChatDotRound/></el-icon> 进入知识库问答
+          <el-button
+            type="primary"
+            size="large"
+            @click="$emit('go-chat')"
+            round
+            class="btn-primary glow-btn"
+          >
+            <el-icon><component :is="buttonConfig.icon"/></el-icon>
+            {{ buttonConfig.text }}
           </el-button>
         </div>
       </div>
     </section>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ChatDotRound } from '@element-plus/icons-vue'
-defineProps<{ badges: any[] }>()
+
+// 定义更完善的 Props 模型
+interface DescriptionModel {
+  prefix: string;
+  hl1: string;
+  middle: string;
+  hl2: string;
+  suffix: string;
+  line2Prefix: string;
+  hl3: string;
+  line2Suffix: string;
+}
+
+interface TitleModel {
+  main: string;
+  sub: string;
+}
+
+interface ButtonModel {
+  text: string;
+  icon: any;
+}
+
+defineProps<{
+  badges: any[],
+  title: TitleModel,
+  description: DescriptionModel,
+  buttonConfig: ButtonModel
+}>()
+
 defineEmits(['go-chat', 'toggle-details', 'scroll-to'])
 </script>
-<style  src="../../assets/styles/home.css" scoped></style>
+
+<style src="../../assets/styles/home.css" scoped></style>

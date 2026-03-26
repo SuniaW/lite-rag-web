@@ -7,28 +7,13 @@
 
     <div class="scroll-content">
       <!-- 1. 头部标题区 (Hero Section) -->
-      <section class="hero-section glass-effect">
-        <div class="tech-badges animate-fade-in">
-          <span class="badge-item primary">DeepSeek-V3/R1 Inside</span>
-          <span class="badge-item success">Spring AI 生态驱动</span>
-        </div>
-
-        <h1 class="main-title animate-title">
-          AI 天气<span class="gradient-text">智能助手</span>
-        </h1>
-
-        <p class="description animate-fade-in-delay">
-          超越传统预报。利用 <span class="highlight">Function Calling</span> 技术直连实时气象数据，
-          结合 <span class="highlight-alt">DeepSeek-R1</span> 推理能力，为您定制专业级的穿衣与出行建议。
-        </p>
-
-        <div class="cta-area animate-fade-in-delay">
-          <el-button type="primary" size="large" round class="cta-button">
-            立即开启智能气象对话
-            <el-icon class="el-icon--right"><Right /></el-icon>
-          </el-button>
-        </div>
-      </section>
+      <HomeHero
+        :badges="weatherBadges"
+        :title="weatherTitle"
+        :description="weatherDescription"
+        :button-config="weatherButton"
+        @go-chat="handleGoChat"
+      />
 
       <!-- 2. 核心技术卖点 (Features) -->
       <el-row :gutter="24" class="feature-grid">
@@ -94,7 +79,40 @@
 
 <script setup lang="ts">
 import { Sunny, Connection, Cpu, Right, DArrowRight } from '@element-plus/icons-vue'
+import HomeHero from "@/components/ragpro/HomeHero.vue";
+import {onUnmounted, ref} from "vue";
+import {useRouter} from "vue-router";
+const router = useRouter()
+// 1. 顶部标签数据 (Badges)
+const weatherBadges = [
+  { text: 'DeepSeek-V3/R1 Inside', type: 'primary' }, // 对应蓝色标签
+  { text: 'Spring AI 生态驱动', type: 'success' }     // 对应绿色标签
+];
 
+// 2. 标题数据 (Title)
+const weatherTitle = {
+  main: 'AI 天气',
+  sub: '智能助手'
+};
+
+// 3. 描述文本数据 (Description)
+// 这里的拆分完全对应模板中的 strong 标签位置
+const weatherDescription = {
+  prefix: '超越传统预报。利用 ',
+  hl1: 'Function Calling',              // 第一个高亮词
+  middle: ' 技术直连实时气象数据，结合 ',
+  hl2: 'DeepSeek-R1',                 // 第二个高亮词
+  suffix: ' 推理能力，为您定制专业级的穿衣与出行建议。',
+  line2Prefix: '',                     // 这张图只有一行长文本，此处留空
+  hl3: '',
+  line2Suffix: ''
+};
+
+// 4. 按钮配置 (Button)
+const weatherButton = {
+  text: '立即开启智能气象对话',
+  icon: 'Right' // 对应图片中的右箭头图标
+};
 const features = [
   {
     title: '实时气象同步',
@@ -121,6 +139,30 @@ const features = [
     tech: 'DeepSeek 推理模型'
   }
 ]
+
+const showBackToTop = ref(false)
+
+const goToChat = () => router.push('/chat/ragbox')
+
+const scrollToSection = (id: string) => {
+  const el = document.getElementById(id)
+  if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'})
+}
+
+const scrollToTop = () => {
+  if (homeContainer.value) homeContainer.value.scrollTo({top: 0, behavior: 'smooth'})
+}
+
+const handleScroll = (e: Event) => {
+  const target = e.target as HTMLElement
+  showBackToTop.value = target.scrollTop > 300
+}
+
+onUnmounted(() => {
+  // 离开页面时重置全局滚动状态，防止影响下一个页面
+  showBackToTop.value = false
+})
+
 </script>
 
 <style scoped>

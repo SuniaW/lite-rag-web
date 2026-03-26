@@ -4,7 +4,10 @@
 
       <!-- 1. 欢迎区 -->
       <HomeHero
-        :badges="badges"
+        :badges="heroBadges"
+        :title="heroTitle"
+        :description="heroDescription"
+        :button-config="heroButton"
         @go-chat="goToChat"
         @scroll-to="scrollToSection"
       />
@@ -47,7 +50,6 @@ const homeContainer = ref<HTMLElement | null>(null)
 
 // 💡 导入所有常量逻辑
 import {
-  badges,
   coreMetrics, handbookTopics, handleTopicClick, openGithubHandbook,
   performanceData,
   softwareSpecs
@@ -59,6 +61,35 @@ import {useRouter} from "vue-router";
 import HomeHandbook from "@/components/ragpro/HomeHandbook.vue";
 
 const router = useRouter()
+// 基于图片 2 (Lite-RAG) 提取的数据模型
+const heroBadges = [
+  { text: 'Spring Boot 3.4.3', type: 'info' },   // 对应蓝色圆点
+  { text: 'Spring AI M6', type: 'warning' },     // 对应橙色圆点
+  { text: 'Milvus 2.6.0', type: 'success' },     // 对应绿色圆点
+  { text: '2C4G 优化', type: 'info' }            // 对应灰色圆点
+];
+
+const heroTitle = {
+  main: 'Lite-RAG',
+  sub: '智能助手'
+};
+
+const heroDescription = {
+  prefix: '基于 ',
+  hl1: 'Spring AI',
+  middle: ' 与 ',
+  hl2: 'Milvus 2.6',
+  suffix: ' 构建的工业级私有化知识库。',
+  line2Prefix: '经过深度性能调优，实现 ',
+  hl3: '低功耗环境下的秒级生成',
+  line2Suffix: '。'
+};
+
+const heroButton = {
+  text: '进入知识库问答',
+  icon: 'ChatDotRound' // 需确保已注册或直接传递组件对象
+};
+
 const showBackToTop = ref(false)
 
 const goToChat = () => router.push('/chat/ragbox')
