@@ -69,7 +69,7 @@ import {
   DArrowLeft,
   DArrowRight,
   HomeFilled,
-  MagicStick
+  MagicStick, User
 } from "@element-plus/icons-vue";
 
 const route = useRoute()
@@ -96,6 +96,11 @@ const menuModel = [
     title: 'AI 天气智能助手',
     index: '/chat/weather',
     icon: markRaw(MagicStick)
+  },
+  {
+    title: '关于作者',
+    index: '/chat/about',
+    icon: markRaw(User)
   }
 ]
 </script>

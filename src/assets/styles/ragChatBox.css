@@ -891,26 +891,6 @@
   text-align: right;
 }
 
-/* ==================== 回到顶部按钮 ==================== */
-.back-to-top {
-  position: fixed;
-  bottom: 100px;
-  right: 35px;
-  z-index: 1000;
-  box-shadow: var(--shadow-lg);
-  width: 46px;
-  height: 46px;
-  border: none;
-  background: var(--gradient-accent);
-  color: white;
-  transition: all 0.3s ease;
-}
-
-.back-to-top:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(64, 158, 255, 0.4);
-}
-
 /* ==================== Markdown 样式 ==================== */
 :deep(.markdown-body) {
   font-size: 15px;

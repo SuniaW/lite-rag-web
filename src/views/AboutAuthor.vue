@@ -64,3 +64,4 @@ onUnmounted(() => {
 </script>
 
 <style src="../assets/styles/home.css" scoped></style>
+<style src="../assets/styles/common.css" scoped></style>

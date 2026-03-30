@@ -1,713 +1,223 @@
 <template>
-  <div class="home-container" ref="homeContainer" >
-    <!-- 顶部导航提示 -->
-    <div class="top-banner">
-      <div class="banner-content">
-        <span class="banner-icon">🚀</span>
-        <span class="banner-text">专为 2 核 4G 环境深度优化的企业级 RAG 系统</span>
-        <el-tag size="small" type="success" effect="dark" class="banner-tag">生产就绪</el-tag>
-      </div>
-      <div class="banner-glow"></div>
-    </div>
-
-    <div class="main-content">
-      <!-- Hero 欢迎区 -->
-      <section class="hero-section">
-        <div class="hero-bg-decoration">
-          <div class="hero-orb orb-1"></div>
-          <div class="hero-orb orb-2"></div>
-          <div class="hero-orb orb-3"></div>
-        </div>
-
-        <div class="hero-card glass-effect">
-          <div class="hero-badge-group">
-            <el-tag
-              v-for="(badge, index) in badges"
-              :key="badge.text"
-              :type="badge.type"
-              size="small"
-              round
-              class="hero-badge"
-              :style="{ animationDelay: `${index * 0.1}s` }"
-            >
-              <span class="badge-dot"></span>
-              {{ badge.text }}
-            </el-tag>
-          </div>
-
-          <h1 class="hero-title">
-            <span class="gradient-text">Lite-RAG</span>
-            <span class="title-subtitle">智能助手</span>
-          </h1>
-
-          <p class="hero-subtitle">
-            基于 <strong class="highlight-primary">Spring AI</strong> 与 <strong
-            class="highlight-secondary">Milvus 2.6</strong> 构建的工业级私有化知识库。<br>
-            经过深度性能调优，实现 <strong class="highlight-accent">低功耗环境下的秒级生成</strong>。
-          </p>
-
-          <div class="action-group">
-            <el-button type="primary" size="large" @click="goToChat" round
-                       class="btn-primary glow-btn">
-              <el-icon>
-                <ChatDotRound/>
-              </el-icon>
-              进入知识库问答
-            </el-button>
-            <el-button size="large" round @click="handleToggleDetails" class="btn-secondary">
-              <el-icon>
-                <component :is="showDetails ? 'Fold' : 'Expand'"/>
-              </el-icon>
-              {{ showDetails ? '隐藏技术规格' : '技术规格说明' }}
-            </el-button>
-            <el-button size="large" round @click="scrollToSection('author-section')"
-                       class="btn-tertiary">
-              <el-icon>
-                <User/>
-              </el-icon>
-              关于作者
-            </el-button>
-          </div>
-        </div>
-      </section>
-
-      <!-- 核心指标区 -->
-      <div class="metrics-grid">
-        <div
-          class="metric-item glass-effect"
-          v-for="(m, index) in coreMetrics"
-          :key="m.title"
-          :style="{ animationDelay: `${index * 0.1}s` }"
-        >
-          <div class="metric-icon-wrapper">
-            <div class="metric-icon">{{ m.icon }}</div>
-            <div class="metric-ring"></div>
-          </div>
-          <div class="m-value">{{ m.value }}</div>
-          <div class="m-title">{{ m.title }}</div>
-          <div class="m-desc">{{ m.desc }}</div>
-          <div class="metric-hover-glow"></div>
-        </div>
-      </div>
-
-      <!-- 隐藏的技术细节区 -->
-      <transition name="el-zoom-in-top">
-        <div v-if="showDetails" id="tech-section" class="details-section">
-          <!-- 软件规格 -->
-          <el-row :gutter="20" style="margin-top: 20px;">
-            <el-col :xs="24" :md="24">
-              <el-card header="📋 软件规格清单" class="info-card glass-effect">
-                <el-table
-                  :data="softwareSpecs"
-                  stripe
-                  style="width: 100%"
-                  :default-sort="{prop: 'category', order: 'ascending'}"
-                  class="styled-table"
-                >
-                  <el-table-column prop="category" label="类别" width="120" sortable/>
-                  <el-table-column prop="name" label="名称" width="180"/>
-                  <el-table-column prop="version" label="版本" width="120"/>
-                  <el-table-column prop="purpose" label="用途"/>
-                  <el-table-column prop="status" label="状态" width="100">
-                    <template #default="scope">
-                      <el-tag
-                        :type="scope.row.status === '生产级' ? 'success' : 'info'"
-                        size="small"
-                        effect="dark"
-                      >
-                        {{ scope.row.status }}
-                      </el-tag>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-card>
-            </el-col>
-          </el-row>
-
-          <!-- 核心技术详解 -->
-          <el-row :gutter="20" style="margin-top: 20px;">
-            <el-col :xs="24" :md="24">
-              <el-card header="🔬 核心技术详解" class="info-card glass-effect">
-                <div class="tech-details">
-                  <div class="tech-detail-item" v-for="(tech, index) in coreTechnologies"
-                       :key="tech.name" :style="{ animationDelay: `${index * 0.1}s` }">
-                    <div class="tech-detail-header">
-                      <span class="tech-icon">{{ tech.icon }}</span>
-                      <h4>{{ tech.name }}</h4>
-                      <el-tag :type="tech.tagType" size="small" effect="dark">{{
-                          tech.level
-                        }}
-                      </el-tag>
-                    </div>
-                    <p class="tech-detail-desc">{{ tech.description }}</p>
-                    <div class="tech-detail-features">
-                      <span v-for="feature in tech.features" :key="feature" class="feature-tag">
-                        <el-icon><Check/></el-icon>
-                        {{ feature }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20" style="margin-top: 20px;">
-            <!-- 核心技术栈 -->
-            <el-col :xs="24" :md="24">
-              <el-card shadow="hover" class="techstack-card-v2">
-                <template #header>
-                  <div class="card-header">
-                    <div class="header-left">
-                      <el-icon class="header-icon">
-                        <Tools/>
-                      </el-icon>
-                      <h3>核心技术栈</h3>
-                    </div>
-                    <el-tag type="warning" size="small" effect="dark" round>最新版本</el-tag>
-                  </div>
-                </template>
-
-                <!-- 技术栈标签流 -->
-                <div class="tech-flow">
-                  <div class="tech-item" v-for="(tech, index) in allTechs" :key="index">
-                    <el-tag :type="getTechType(tech)" round size="small">{{ tech }}</el-tag>
-                  </div>
-                </div>
-
-                <!-- 调优要点时间轴 -->
-                <div class="timeline">
-                  <div
-                    v-for="(tip, index) in optimizationTips"
-                    :key="index"
-                    class="timeline-item"
-                  >
-                    <div class="timeline-dot">
-                      <el-icon>
-                        <CircleCheckFilled/>
-                      </el-icon>
-                    </div>
-                    <div class="timeline-content">
-                      <div class="timeline-number">{{ String(index + 1).padStart(2, '0') }}</div>
-                      <div class="timeline-text">{{ tip }}</div>
-                    </div>
-                    <div class="timeline-bar" v-if="index < optimizationTips.length - 1"></div>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-          <!-- 服务器规格 -->
-          <el-row :gutter="20" style="margin-top: 20px;">
-            <el-col :xs="24" :md="12">
-              <el-card header="🖥️ 服务器规格" class="info-card glass-effect">
-                <div class="spec-grid">
-                  <div class="spec-item" v-for="(spec, index) in serverSpecs" :key="spec.name"
-                       :style="{ animationDelay: `${index * 0.05}s` }">
-                    <div class="spec-label">{{ spec.name }}</div>
-                    <div class="spec-value">{{ spec.value }}</div>
-                    <div class="spec-note">{{ spec.note }}</div>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-
-            <!-- 服务规格 -->
-            <el-col :xs="24" :md="12">
-              <el-card header="⚙️ 服务规格" class="info-card glass-effect">
-                <div class="spec-grid">
-                  <div class="spec-item" v-for="(spec, index) in serviceSpecs" :key="spec.name"
-                       :style="{ animationDelay: `${index * 0.05}s` }">
-                    <div class="spec-label">{{ spec.name }}</div>
-                    <div class="spec-value gradient-value">{{ spec.value }}</div>
-                    <div class="spec-note">{{ spec.note }}</div>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-          <!-- 性能对比卡片 -->
-          <el-row :gutter="20" style="margin-top: 20px;">
-            <el-col :xs="24" :md="24">
-              <el-card header="📊 工业级调优对比" class="info-card glass-effect performance-card">
-                <template #header>
-                  <div class="card-header">
-                    <div class="header-left">
-                      <span class="header-icon">📊</span>
-                      <span>工业级调优对比</span>
-                    </div>
-                    <el-tag type="success" size="small" effect="dark">生产验证</el-tag>
-                  </div>
-                </template>
-                <div class="table-container">
-                  <table class="stat-table">
-                    <thead>
-                    <tr>
-                      <th>指标</th>
-                      <th>默认配置</th>
-                      <th>极致调优</th>
-                      <th>提升</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(item, index) in performanceData" :key="item.metric">
-                      <td class="metric-name">
-                        <span class="row-indicator"
-                              :style="{ animationDelay: `${index * 0.1}s` }"></span>
-                        {{ item.metric }}
-                      </td>
-                      <td class="status-bad">
-                        <span class="status-dot bad"></span>
-                        {{ item.before }}
-                      </td>
-                      <td class="status-good">
-                        <span class="status-dot good"></span>
-                        {{ item.after }}
-                      </td>
-                      <td class="improvement">
-                        <span class="improvement-badge">+{{ item.improvement }}</span>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-          <!-- 内存分配可视化 -->
-          <el-row :gutter="20" style="margin-top: 20px;">
-            <el-col :xs="24" :md="24">
-              <el-card header="💾 4GB 内存分配方案" class="info-card glass-effect">
-                <div class="memory-allocation">
-                  <div
-                    v-for="(item, index) in memoryAllocation"
-                    :key="item.component"
-                    class="memory-bar"
-                    :style="{ animationDelay: `${index * 0.1}s` }"
-                  >
-                    <div class="memory-label">
-                      <span class="component-name">{{ item.component }}</span>
-                      <span class="component-size" :style="{ color: item.color }">{{
-                          item.memory
-                        }}</span>
-                    </div>
-                    <div class="memory-track">
-                      <div
-                        class="memory-fill"
-                        :style="{
-                          width: item.percentage,
-                          backgroundColor: item.color
-                        }"
-                      >
-                        <span class="memory-percent">{{ item.percentage }}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="memory-total">
-                    <span>总内存：</span>
-                    <span class="total-value">4.0 GB</span>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-          <!-- 开源仓库 & 技术博客 -->
-          <el-row :gutter="20" style="margin-top: 20px;">
-            <el-col :xs="24" :md="24">
-              <el-card header="📦 开源代码仓库" class="info-card glass-effect repo-card">
-                <div class="repo-list">
-                  <div class="repo-item" v-for="(repo, index) in repositories" :key="repo.name"
-                       :style="{ animationDelay: `${index * 0.08}s` }">
-                    <div class="repo-icon">
-                      <el-icon>
-                        <FolderOpened/>
-                      </el-icon>
-                    </div>
-                    <div class="repo-info">
-                      <h4>{{ repo.name }}</h4>
-                      <p>{{ repo.description }}</p>
-                      <div class="repo-meta">
-                        <span class="repo-lang">{{ repo.language }}</span>
-                      </div>
-                    </div>
-                    <el-button type="primary" text @click="openLink(repo.url)" class="repo-btn">
-                      <el-icon>
-                        <Link/>
-                      </el-icon>
-                      访问
-                    </el-button>
-                  </div>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-        </div>
-      </transition>
-
-      <!-- ==================== 新增：全栈学习手册专区 ==================== -->
-      <section class="handbook-section" id="handbook-section">
-        <el-card class="handbook-card glass-effect">
-          <template #header>
-            <div class="card-header">
-              <div class="header-left">
-                <span class="header-icon">📚</span>
-                <span>Spring AI + 大模型全栈实战指南</span>
-              </div>
-              <el-tag type="danger" size="small" effect="dark">完整学习路径</el-tag>
-            </div>
-          </template>
-
-          <div class="handbook-intro">
-            <p class="intro-text">
-              本系统是我在学习 <strong>Spring AI + 大模型</strong> 过程中的全栈实践成果。
-              以下是完整的 9 大专题学习手册，涵盖从架构设计到生产部署的全部知识。
-            </p>
-            <div class="handbook-stats">
-              <div class="handbook-stat-item">
-                <div class="stat-num">9</div>
-                <div class="stat-label">核心专题</div>
-              </div>
-              <div class="handbook-stat-item">
-                <div class="stat-num">50+</div>
-                <div class="stat-label">技术要点</div>
-              </div>
-              <div class="handbook-stat-item">
-                <div class="stat-num">100%</div>
-                <div class="stat-label">开源代码</div>
-              </div>
-              <div class="handbook-stat-item">
-                <div class="stat-num">生产级</div>
-                <div class="stat-label">部署方案</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- 9 大专题网格 -->
-          <el-row :gutter="20" class="topic-grid">
-            <el-col
-              v-for="(topic, index) in handbookTopics"
-              :key="index"
-              :xs="24"
-              :sm="12"
-              :md="8"
-              class="topic-col"
-            >
-              <el-card
-                shadow="hover"
-                class="topic-card"
-                @click="handleTopicClick(index)"
-              >
-                <div class="topic-card-header">
-                  <span class="topic-num">{{ String(index + 1).padStart(2, '0') }}</span>
-                  <el-tag :type="getTopicLevelType(topic.level)" size="small">{{
-                      topic.level
-                    }}
-                  </el-tag>
-                </div>
-                <h3 class="topic-title">{{ topic.title }}</h3>
-                <p class="topic-desc">{{ topic.desc }}</p>
-                <div class="topic-tags">
-            <span v-for="tag in topic.tags" :key="tag" class="mini-topic-tag">
-              <el-icon><Ticket/></el-icon> {{ tag }}
-            </span>
-                </div>
-                <div class="topic-progress">
-                  <div class="progress-bar">
-                    <div class="progress-fill" :style="{ width: topic.progress }"></div>
-                  </div>
-                  <span class="progress-text">{{ topic.progress }}</span>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-
-          <!-- 手册特色 -->
-          <el-row :gutter="20" style="margin-top: 30px;">
-            <el-col :xs="24" :md="8" v-for="(feature, index) in handbookFeatures" :key="index">
-              <div class="handbook-feature-item">
-                <div class="feature-icon-wrapper" :style="{ background: feature.color }">
-                  <el-icon :size="28" color="#fff">
-                    <component :is="feature.icon"/>
-                  </el-icon>
-                </div>
-                <h4>{{ feature.title }}</h4>
-                <p>{{ feature.desc }}</p>
-              </div>
-            </el-col>
-          </el-row>
-
-          <!-- 行动按钮 -->
-          <div class="handbook-actions">
-            <el-button type="primary" size="large" round @click="openGithubHandbook"
-                       class="glow-btn">
-              <el-icon>
-                <FolderOpened/>
-              </el-icon>
-              GitHub 查看全部文档
-            </el-button>
-          </div>
-        </el-card>
-      </section>
-      <!-- ==================== 学习手册专区结束 ==================== -->
-
-      <!-- 作者推广区 -->
-      <section id="author-section" class="author-section">
-        <el-card class="author-card glass-effect">
-          <div class="author-bg-decoration">
-            <div class="author-orb"></div>
-          </div>
-          <div class="author-content">
-            <div class="author-avatar">
-              <div class="avatar-placeholder">
-                <span class="avatar-text">汪</span>
-                <div class="avatar-ring"></div>
-              </div>
-            </div>
-            <div class="author-info">
-              <h2>{{ author.name }}</h2>
-              <p class="author-title">{{ author.title }}</p>
-              <p class="author-desc">{{ author.description }}</p>
-              <div class="author-tags">
-                <el-tag v-for="tag in author.tags" :key="tag" size="small" effect="plain"
-                        class="author-tag">
-                  {{ tag }}
-                </el-tag>
-              </div>
-              <div class="author-stats">
-                <div class="stat-item" v-for="stat in author.stats" :key="stat.label">
-                  <div class="stat-value">{{ stat.value }}</div>
-                  <div class="stat-label">{{ stat.label }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </el-card>
-
-        <!-- 个人优势 -->
-        <el-card class="advantage-card glass-effect" style="margin-top: 30px;">
-          <template #header>
-            <div class="card-header">
-              <div class="header-left">
-                <span class="header-icon">💡</span>
-                <span>个人优势</span>
-              </div>
-              <el-tag type="primary" size="small" effect="dark">12 年专业经验</el-tag>
-            </div>
-          </template>
-          <div class="advantage-grid">
-            <div class="advantage-item" v-for="(item, index) in advantages" :key="index"
-                 :style="{ animationDelay: `${index * 0.1}s` }">
-              <div class="advantage-number">{{ index + 1 }}</div>
-              <div class="advantage-content">
-                <p>{{ item }}</p>
-              </div>
-            </div>
-          </div>
-        </el-card>
-
-        <!-- 项目经历展示 -->
-        <el-card class="project-card glass-effect" style="margin-top: 30px;">
-          <template #header>
-            <div class="card-header">
-              <div class="header-left">
-                <span class="header-icon">🎯</span>
-                <span>代表项目经历</span>
-              </div>
-              <el-tag type="primary" size="small" effect="dark">12 年专业经验</el-tag>
-            </div>
-          </template>
-          <div class="project-timeline">
-            <div class="project-item" v-for="(project, index) in projects" :key="project.name"
-                 :style="{ animationDelay: `${index * 0.1}s` }">
-              <div class="project-time">{{ project.time }}</div>
-              <div class="project-dot"></div>
-              <div class="project-content">
-                <h4>{{ project.name }}</h4>
-                <p class="project-company">{{ project.company }}</p>
-                <div class="project-tags">
-                  <el-tag v-for="tech in project.technologies" :key="tech" size="small"
-                          class="project-tech-tag">
-                    {{ tech }}
-                  </el-tag>
-                </div>
-                <ul class="project-achievements">
-                  <li v-for="achievement in project.achievements" :key="achievement">
-                    <el-icon class="achievement-icon">
-                      <Check/>
-                    </el-icon>
-                    <span>{{ achievement }}</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </el-card>
-
-        <!-- 专业技能展示 -->
-        <el-card class="skills-card glass-effect" style="margin-top: 30px;">
-          <template #header>
-            <div class="card-header">
-              <div class="header-left">
-                <span class="header-icon">🛠️</span>
-                <span>专业技能</span>
-              </div>
-              <el-tag type="success" size="small" effect="dark">全栈能力</el-tag>
-            </div>
-          </template>
-          <div class="skills-grid">
-            <div class="skill-category" v-for="(category, index) in skills" :key="category.name"
-                 :style="{ animationDelay: `${index * 0.1}s` }">
-              <div class="skill-header">
-                <span class="skill-icon">{{ category.icon }}</span>
-                <h4>{{ category.name }}</h4>
-                <el-tag
-                  :type="category.level === '精通' ? 'danger' : category.level === '熟练' ? 'warning' : 'info'"
-                  size="small">
-                  {{ category.level }}
-                </el-tag>
-              </div>
-              <div class="skill-items">
-                <span class="skill-item" v-for="item in category.items" :key="item">{{
-                    item
-                  }}</span>
-              </div>
-            </div>
-          </div>
-        </el-card>
-      </section>
-
-      <!-- 联系方式 -->
-      <section class="contact-section">
-        <el-card class="contact-card gradient-card">
-          <div class="contact-bg-pattern"></div>
-          <h3>📬 联系与合作</h3>
-          <p>欢迎交流 RAG 技术、性能调优、企业私有化部署等话题</p>
-          <div class="contact-methods">
-            <div class="contact-item" v-for="contact in contacts" :key="contact.name">
-              <div class="contact-icon-wrapper">
-                <el-icon class="contact-icon">
-                  <component :is="contact.icon"/>
-                </el-icon>
-              </div>
-              <div class="contact-info">
-                <span class="contact-label">{{ contact.name }}</span>
-                <span class="contact-value">{{ contact.value }}</span>
-              </div>
-            </div>
-          </div>
-        </el-card>
-      </section>
-
-      <!-- 底部撑开空间 -->
-      <div class="bottom-spacer"></div>
-    </div>
-
-    <!-- 回到顶部按钮 -->
-    <transition name="fade">
-      <el-button
-        v-if="showBackToTop"
-        circle
-        class="back-to-top glow-btn"
-        @click="scrollToTop"
+  <div>
+    <el-row :gutter="24" class="nav-grid-container">
+      <!-- 使用 v-for 循环渲染卡片 -->
+      <el-col
+        v-for="item in navCards"
+        :key="item.title"
+        :xs="24" :sm="12" :md="8"
       >
-        <el-icon>
-          <ArrowUp/>
-        </el-icon>
-      </el-button>
-    </transition>
+        <div class="card-wrapper" @click="handleGoto(item.path)">
+          <el-card :class="['custom-card', item.typeClass]" shadow="hover">
+            <div class="card-icon">
+              <!-- 动态渲染组件图标 -->
+              <el-icon :size="36">
+                <component :is="item.icon"/>
+              </el-icon>
+            </div>
+            <h3 class="card-title">{{ item.title }}</h3>
+            <p class="card-desc">{{ item.desc }}</p>
+            <div class="card-arrow">
+              <span>{{ item.actionText }}</span>
+              <el-icon>
+                <ArrowRight/>
+              </el-icon>
+            </div>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script setup lang="ts">
-import {nextTick, onMounted, onUnmounted} from 'vue'
-import {  ChatDotRound, Check, ArrowUp, User, FolderOpened, Link, Ticket} from '@element-plus/icons-vue'
-import {Tools, CircleCheckFilled} from '@element-plus/icons-vue'
-import {
-  advantages,
-  allTechs,
-  author,
-  badges,
-  contacts,
-  coreMetrics,
-  coreTechnologies,
-  getTechType,
-  getTopicLevelType,
-  handbookFeatures,
-  handbookTopics,
-  handleTopicClick,
-  homeContainer,
-  memoryAllocation,
-  openGithubHandbook,
-  optimizationTips,
-  performanceData,
-  projects,
-  repositories,
-  serverSpecs,
-  serviceSpecs,
-  showBackToTop,
-  showDetails,
-  skills,
-  softwareSpecs
-} from "@/assets/ts/constants.ts";
+import {markRaw} from 'vue';
+import {ChatDotRound, Sunny, UserFilled, ArrowRight} from '@element-plus/icons-vue';
 import {useRouter} from "vue-router";
 
+const router = useRouter();
 
-
-// 方法
-const handleToggleDetails = () => {
-  showDetails.value = !showDetails.value
-  if (showDetails.value) {
-    nextTick(() => {
-      const el = document.getElementById('tech-section')
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    })
+// 1. 定义数据模型
+const navCards = [
+  {
+    title: 'RAG 智能问答',
+    desc: '企业级私有知识库',
+    actionText: '立即体验',
+    path: '/chat/rag',
+    icon: markRaw(ChatDotRound),
+    typeClass: 'card-rag'
+  },
+  {
+    title: 'AI 天气助手',
+    desc: '实时气象与出行建议',
+    actionText: '查看详情',
+    path: '/chat/weather', // 如果有不同路径可在此修改
+    icon: markRaw(Sunny),
+    typeClass: 'card-weather'
+  },
+  {
+    title: '关于作者',
+    desc: '12 年经验全栈开发者',
+    actionText: '了解更多',
+    path: '/chat/about',
+    icon: markRaw(UserFilled),
+    typeClass: 'card-author'
   }
-}
+];
 
-const router = useRouter()
-const goToChat = () => {
-  router.push('/chat/rag')
-}
-
-const openLink = (url: string) => {
-  if (url === '#') return
-  window.open(url, '_blank')
-}
-
-const scrollToSection = (id: string) => {
-  const el = document.getElementById(id)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-}
-
-const scrollToTop = () => {
-  // 💡 修复：如果 home-container 负责滚动
-  if (homeContainer.value) {
-    homeContainer.value.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-}
-
-// 💡 修复：监听 home-container 容器的滚动而不是 window
-const handleScroll = () => {
-  if (homeContainer.value) {
-    showBackToTop.value = homeContainer.value.scrollTop > 300
-  }
-}
-
-onMounted(() => {
-  if (homeContainer.value) {
-    homeContainer.value.addEventListener('scroll', handleScroll, { passive: true })
-  }
-})
-
-onUnmounted(() => {
-  if (homeContainer.value) {
-    homeContainer.value.removeEventListener('scroll', handleScroll)
-  }
-})
+// 2. 统一跳转方法
+const handleGoto = (path: string) => {
+  router.push(path);
+};
 </script>
 
-<style src="../assets/styles/home.css" scoped></style>
+<style scoped>
+/* 容器 */
+.nav-grid-container {
+  margin-bottom: 20px;
+  padding: 10px 0;
+}
 
+.card-wrapper {
+  cursor: pointer;
+  height: 100%;
+  margin-bottom: 24px; /* 适配移动端堆叠间距 */
+}
+
+/* 卡片基础样式 */
+.custom-card {
+  height: 100%;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card-wrapper:hover .custom-card {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* 图标区域 */
+.card-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease;
+}
+
+.card-wrapper:hover .card-icon {
+  transform: scale(1.1);
+}
+
+.card-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #303133;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: #909399;
+  margin: 0 0 16px 0;
+}
+
+.card-arrow {
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.card-wrapper:hover .card-arrow {
+  opacity: 1;
+}
+
+.card-wrapper:hover .card-arrow .el-icon {
+  transform: translateX(4px);
+}
+
+/* --- 主题色逻辑保持不变 --- */
+.card-rag .card-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+}
+
+.card-rag:hover {
+  border-color: #764ba2;
+}
+
+.card-rag:hover .card-arrow {
+  color: #764ba2;
+}
+
+.card-weather .card-icon {
+  background: linear-gradient(135deg, #29b6f6 0%, #0288d1 100%);
+  color: #fff;
+}
+
+.card-weather:hover {
+  border-color: #0288d1;
+}
+
+.card-weather:hover .card-arrow {
+  color: #0288d1;
+}
+
+.card-author .card-icon {
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  color: #fff;
+}
+
+.card-author:hover {
+  border-color: #fda085;
+}
+
+.card-author:hover .card-arrow {
+  color: #fda085;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .custom-card {
+    padding: 20px 15px;
+    flex-direction: row;
+    text-align: left;
+    gap: 15px;
+  }
+
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .card-arrow {
+    display: none;
+  }
+
+  .card-title {
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .card-desc {
+    font-size: 12px;
+    margin-bottom: 0;
+  }
+}
+</style>
