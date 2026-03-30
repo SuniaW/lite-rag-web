@@ -68,12 +68,21 @@
           </div>
         </div>
       </div>
+
+      <!-- 7. 回到顶部 -->
+      <transition name="fade">
+        <el-button v-if="showBackToTop" circle class="back-to-top glow-btn" @click="scrollToTop">
+          <el-icon>
+            <ArrowUp/>
+          </el-icon>
+        </el-button>
+      </transition>
   </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Sunny, Connection, Cpu, Right, DArrowRight } from '@element-plus/icons-vue'
+import {Sunny, Connection, Cpu, Right, DArrowRight, ArrowUp} from '@element-plus/icons-vue'
 import HomeHero from "@/components/ragpro/HomeHero.vue";
 import {onUnmounted, ref} from "vue";
 import {useRouter} from "vue-router";
@@ -136,13 +145,9 @@ const features = [
 ]
 
 const showBackToTop = ref(false)
-
+const homeContainer = ref<HTMLElement | null>(null)
 const goToChat = () => router.push('/chat/ragbox')
 
-const scrollToSection = (id: string) => {
-  const el = document.getElementById(id)
-  if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'})
-}
 
 const scrollToTop = () => {
   if (homeContainer.value) homeContainer.value.scrollTo({top: 0, behavior: 'smooth'})
