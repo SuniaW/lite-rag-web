@@ -63,7 +63,7 @@
 /* ==================== 顶部 Header ==================== */
 .chat-header {
   flex-shrink: 0;
-  height: 72px;
+  height: 40px;
   padding: 0 32px;
   display: flex;
   justify-content: space-between;
@@ -118,8 +118,8 @@
 }
 
 .logo-box {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   background: var(--gradient-accent);
   border-radius: 12px;
   display: flex;
@@ -247,8 +247,8 @@
 }
 
 .icon-wrapper {
-  width: 28px;
-  height: 28px;
+  width: 25px;
+  height: 25px;
   background: rgba(64, 158, 255, 0.1);
   border-radius: 8px;
   display: flex;
@@ -648,7 +648,7 @@
 /* ==================== 底部输入区 ==================== */
 .footer-area {
   flex-shrink: 0;
-  padding: 16px 0 24px;
+  padding: 16px 0 10px;
   background: linear-gradient(transparent, rgba(249, 250, 251, 0.9) 40%);
   position: relative;
   z-index: 10;
@@ -922,7 +922,6 @@
 
 :deep(.markdown-body blockquote) {
   border-left: 4px solid var(--primary-color);
-  padding-left: 16px;
   color: var(--text-secondary);
   background: rgba(64, 158, 255, 0.05);
   border-radius: 0 8px 8px 0;
@@ -934,7 +933,7 @@
 @media (max-width: 768px) {
   .chat-header {
     padding: 0 16px;
-    height: 64px;
+    height: 30px;
   }
 
   .title-text {
@@ -1086,3 +1085,106 @@
     grid-template-columns: 1fr;
   }
 }
+
+  /* ==================== 紧凑型内置示例问题 ==================== */
+  .mini-prompt-container {
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  }
+
+  .prompt-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .sparkle-icon {
+    color: var(--warning-color);
+    animation: rotateSparkle 3s infinite linear;
+  }
+
+  @keyframes rotateSparkle {
+    0% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.8; }
+  }
+
+  .prompt-scroller {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 2px 2px 6px 2px;
+    /* 隐藏滚动条 */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .prompt-scroller::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+  }
+
+  .prompt-chip {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .prompt-chip:hover {
+    background: white;
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.1);
+  }
+
+  .chip-icon {
+    font-size: 14px;
+  }
+
+  .chip-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .prompt-chip:hover .chip-text {
+    color: var(--primary-color);
+  }
+
+  /* 动画：收起效果 */
+  .fade-slide-up-enter-active,
+  .fade-slide-up-leave-active {
+    transition: all 0.3s ease;
+    max-height: 100px;
+    overflow: hidden;
+  }
+
+  .fade-slide-up-enter-from,
+  .fade-slide-up-leave-to {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    transform: translateY(10px);
+  }
+
+  /* ==================== 输入框调整 ==================== */
+  .input-card-refined {
+    /* 适当调大内边距以容纳顶部标签 */
+    padding: 16px;
+  }
+
+  :deep(.el-textarea__inner) {
+    /* 调小行高使空状态更紧凑 */
+    line-height: 1.5;
+  }

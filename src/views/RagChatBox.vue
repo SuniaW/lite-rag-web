@@ -10,7 +10,7 @@
       <div class="header-left">
         <div class="logo-wrapper">
           <div class="logo-box glow-effect">
-            <el-icon size="20"><Cpu /></el-icon>
+            <el-icon size="18"><Cpu /></el-icon>
           </div>
           <div class="title-wrapper">
             <h2 class="title-text">
@@ -18,11 +18,6 @@
               <span class="title-separator">·</span>
               <span>智库问答</span>
             </h2>
-            <div class="status-badge">
-              <span class="dot"></span>
-              <span>RAG Engine V2.0</span>
-              <el-tag size="small" type="success" effect="dark" class="version-tag">在线</el-tag>
-            </div>
           </div>
         </div>
       </div>
@@ -38,7 +33,7 @@
             :show-arrow="false"
           >
             <template #reference>
-              <el-button link class="file-count-trigger glass-btn">
+              <el-button link class="file-count-trigger glass-btn" size="small">
                 <div class="count-badge-wrapper">
                   <div class="icon-wrapper">
                     <el-icon><Files /></el-icon>
@@ -76,6 +71,7 @@
                   </div>
                   <div class="item-actions">
                     <el-button
+                      size="small"
                       link
                       type="danger"
                       class="remove-btn"
@@ -242,62 +238,48 @@
     <div class="footer-area">
       <div class="input-container-wrapper">
 
-        <!-- 💡 示例问题：从输入框内部移出，改为上方网格展示 -->
-        <transition name="fade-slide">
-          <div v-if="messages.length === 0" class="suggestions-grid">
-            <div
-              v-for="(item, index) in exampleQuestions"
-              :key="index"
-              class="suggestion-item glass-effect"
-              @click="handleExampleClick(item.query)"
-            >
-              <div class="suggestion-icon" :style="{ color: item.color }">
-                {{ item.icon }}
+        <div class="input-card-refined glass-effect">
+          <!-- ✨ 新增：内置集成式示例问题 (仅在无消息时显示) -->
+          <transition name="fade-slide-up">
+            <div v-if="messages.length === 0" class="mini-prompt-container">
+              <div class="prompt-header">
+                <el-icon class="sparkle-icon"><MagicStick/></el-icon>
+                <span>你可以试着问我：</span>
               </div>
-              <div class="suggestion-content">
-                <div class="suggestion-text">{{ item.query }}</div>
-                <div class="suggestion-tip">点击立即提问 →</div>
+              <div class="prompt-scroller">
+                <div
+                  v-for="(item, index) in exampleQuestions"
+                  :key="index"
+                  class="prompt-chip"
+                  @click="handleExampleClick(item.query)"
+                >
+                  <span class="chip-icon">{{ item.icon }}</span>
+                  <span class="chip-text">{{ item.query }}</span>
+                </div>
               </div>
             </div>
-          </div>
-        </transition>
+          </transition>
 
-        <!-- 输入控制卡片 (移除了内部的 el-tag 循环) -->
-        <div class="input-card-refined glass-effect">
+          <!-- 输入框主体 -->
           <el-input
             v-model="queryInput"
             type="textarea"
             :autosize="{ minRows: 1, maxRows: 6 }"
-            placeholder="在此输入您的疑问，按 Enter 发送..."
+            placeholder="在此输入您的疑问..."
             @keydown.enter.prevent="sendQuery"
           />
+
+          <!-- 底部状态条 -->
           <div class="input-bottom-bar">
             <div class="bar-left">
               <div class="mode-tag">
                 <el-icon><Lightning /></el-icon>
-                <span>多文档 RAG 模式</span>
-              </div>
-              <div class="file-indicator" v-if="uiFileList.length > 0">
-                <span class="indicator-dot"></span>
-                {{ uiFileList.length }} 份文档已就绪
+                <span>RAG 增强模式</span>
               </div>
             </div>
             <div class="bar-right">
-              <el-button
-                v-if="isLoading"
-                type="danger"
-                circle
-                size="small"
-                :icon="CircleClose"
-                @click="stopGeneration"
-              />
-              <el-button
-                v-else
-                type="primary"
-                circle
-                :disabled="!queryInput.trim()"
-                @click="sendQuery"
-              >
+              <el-button v-if="isLoading" type="danger" circle size="small" :icon="CircleClose" @click="stopGeneration" />
+              <el-button v-else type="primary" circle :disabled="!queryInput.trim()" @click="sendQuery">
                 <el-icon><Promotion /></el-icon>
               </el-button>
             </div>
@@ -329,7 +311,7 @@
 import { ref, nextTick, onMounted, onUnmounted } from 'vue'
 import {
   Link, Timer, Files, CircleClose, Document, FolderOpened, UploadFilled,
-  Lightning, CopyDocument, Star, CloseBold, Warning, ArrowUp, Cpu, Promotion
+  Lightning, CopyDocument, Star, CloseBold, Warning, ArrowUp, Cpu, Promotion, MagicStick
 } from '@element-plus/icons-vue'
 import axios from 'axios'
 import MarkdownIt from 'markdown-it'
@@ -395,8 +377,6 @@ const welcomeFeatures = [
 const exampleQuestions = [
   { icon: '📝', query: 'RAG 系统的四大核心组件及角色分别是什么', color: '#3b82f6' },
   { icon: '🛡️', query: '在 4GB 内存的低配环境下，各组件建议的内存分配红线是多少', color: '#10b981' },
-  { icon: '🚀', query: '为什么 RAG 系统推荐使用 SSE 协议而不是 WebSocket', color: '#f59e0b' },
-  { icon: '🔍', query: '文档切片（Chunking）平衡性能与精度的最佳实践配置是什么', color: '#8b5cf6' },
 ]
 
 // 文件类型颜色映射
