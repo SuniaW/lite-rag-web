@@ -146,7 +146,7 @@ const features = [
 
 const showBackToTop = ref(false)
 const homeContainer = ref<HTMLElement | null>(null)
-const goToChat = () => router.push('/chat/ragbox')
+const goToChat = () => router.push('/chat/weather/pro')
 
 
 const scrollToTop = () => {

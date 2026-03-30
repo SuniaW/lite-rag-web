@@ -16,6 +16,12 @@ const router = createRouter({
       },
     },
     {
+      path: '/chat/weather/pro',
+      component: () => {
+        return import('../views/AiChatBox.vue')
+      },
+    },
+    {
       path: '/chat/ragbox',
       component: () => {
         return import('../views/RagChatBox.vue')
