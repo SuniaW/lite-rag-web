@@ -80,8 +80,8 @@ const heroDescription = {
   middle: ' 与 ',
   hl2: 'Milvus 2.6',
   suffix: ' 构建的工业级私有化知识库。',
-  line2Prefix: '经过深度性能调优 ',
-  hl3: '实现低功耗环境下的秒级生成',
+  line2Prefix: '经过深度性能调优，实现 ',
+  hl3: '低功耗环境下的秒级生成',
   line2Suffix: '。'
 };
 
