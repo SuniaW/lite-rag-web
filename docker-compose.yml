@@ -10,6 +10,7 @@ services:
     environment:
       - CLOUD_IP=${CLOUD_IP}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AMAP_API_KEY=${AMAP_API_KEY}
       - SPRING_THREADS_VIRTUAL_ENABLED=true
     # 阿里云 3.5G 内存环境下，建议给后端硬限制 512M
     deploy:

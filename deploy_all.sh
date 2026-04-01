@@ -74,5 +74,6 @@ echo -e "${GREEN}===============================================================
 echo -e "${GREEN}🎉 部署完成！${NC}"
 echo -e "📱 前端地址: ${YELLOW}http://你的公网IP (80)${NC}"
 echo -e "⚙️  后端变量: CLOUD_IP=${CLOUD_IP}${NC}"
+echo -e "⚙️  后端变量: AMAP_API_KEY=${AMAP_API_KEY}${NC}"
 echo -e "🧠 内存统计: $(free -h | grep Mem | awk '{print $3 "/" $2}') 已用/总量${NC}"
 echo -e "${GREEN}===============================================================${NC}"
